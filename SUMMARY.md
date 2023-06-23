@@ -1,6 +1,6 @@
 # Table of contents
 
-* [👋 블로그소개](README.md)
+* [🚀 블로그소개](README.md)
 
 ##  Apple
 
