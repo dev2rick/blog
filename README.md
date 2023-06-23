@@ -1,7 +1,6 @@
 ---
 description: 블로그 소개 By ChatGPT
-cover: >-
-  https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxOTcwMjR8MHwxfHNlYXJjaHwxMHx8c3BhY2V8ZW58MHx8fHwxNjg1NzY3NDc5fDA&ixlib=rb-4.0.3&q=85
+cover: .gitbook/assets/Rick (2).png
 coverY: 0
 ---
 
