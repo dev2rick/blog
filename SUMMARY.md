@@ -1,11 +1,11 @@
 # Table of contents
 
-* [🚀 블로그소개](README.md)
+* [🚀 Intro](README.md)
 
 ##  Apple
 
-* [Apple 개발 관련](apple/apple/README.md)
-  * [Starscream 에 대하여..](apple/apple/starscream-...md)
+* [Apple Platform](apple/apple-platform/README.md)
+  * [Starscream 에 대하여..](apple/apple-platform/starscream-...md)
 
 ## ⛓ Blockchain
 
