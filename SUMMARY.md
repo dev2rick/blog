@@ -5,7 +5,7 @@
 ##  Apple
 
 * [Apple Platform](apple/apple-platform/README.md)
-  * [Starscream 에 대하여..](apple/apple-platform/starscream-...md)
+  * [Starscream 에 대하여](apple/apple-platform/starscream.md)
 
 ## ⛓ Blockchain
 
