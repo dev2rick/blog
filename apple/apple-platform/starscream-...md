@@ -45,7 +45,7 @@ Starscream 을 사용해서 통신성공, 필요한 기능 구현 완료.. 라�
 
 ## 단서 확보
 
-WalletConnect 는 Starscream 3.x.x 버전을 사용하고 있더라구요?? 아니 Starscream 이 4.x.x 버전이 훨씬 이전에 만들어 졌는데 왜 구버전을 쓰고있지 싶어서 소스를 봤더니.. 3.x.x 버전은 swift 파일이 4개 밖에 없더라구요?
+WalletConnect 의 Example 앱은 Starscream 3.x.x 버전을 사용하고 있더라구요?? 아니 Starscream 이 4.x.x 버전이 훨씬 이전에 만들어 졌는데 왜 구버전을 쓰고있지 싶어서 소스를 봤더니.. 3.x.x 버전은 swift 파일이 4개 밖에 없더라구요?
 
 ### 모르겠고 일단 downgrade 하고 돌려보자.
 
@@ -54,8 +54,6 @@ WalletConnect 는 Starscream 3.x.x 버전을 사용하고 있더라구요?? 아�
 근데 문제는 `protocol` 구조가 많이 달랐어요.
 
 저는 4.0.4 기준으로 코드를 작성 해놨거든요. 3.x.x 버전을 사용하려면 코드를 수정해야 했죠. 4.0.4 에서는 `WebSocketEvent` 가 `enum` 으로 되어 있어서 3.x.x 에 있는 protocol method 들이 하나의 method `didReceive(event:client:)` 에 있는 거죠. (난 이게 더 보기 불편한 것 같은데.. switch case 도 남발하기 싫고...)
-
-일일히 옮겨도 되지만... 그거알죠? 옮겼는데 생각하고 다르게 동작하면 코드 되돌려야할 수도 있는거 ㅎㅎ
 
 {% code title="Starscream 4.0.4" %}
 ```swift
@@ -76,27 +74,65 @@ public protocol WebSocketDelegate: class {
 ```
 {% endcode %}
 
+event 의 case 마다 일일히 옮겨도 되지만... 그거알죠? 옮겼는데 생각하고 다르게 동작하면 코드 되돌려야할 수도 있는거 ㅎㅎ
+
+그래서 4.0.4 버전에서 뭐가 달라졌고, 3.x.x 버전에서는 왜 Background 이슈가 없는지 찾아봤어요. Starscream 소스를요..
+
+## 결론
+
+Starscream 4.0.4 버전에서는 WebSocket 객체 초기화 시 engine 을 설정할 수 있는데 설정하지 않으면 OS 버전에 맞게 적절한 engine 을 사용함. (iOS 16.4 시뮬레이터를 이용했기 때문에 `NativeEngine` 을 engine 으로 주입받았던 것.
+
+<pre class="language-swift" data-title="WebSocket.swift" data-full-width="false"><code class="lang-swift"><strong>public convenience init(request: URLRequest, certPinner: CertificatePinning? = FoundationSecurity(), compressionHandler: CompressionHandler? = nil, useCustomEngine: Bool = true) {
+</strong>    if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *), !useCustomEngine {
+        self.init(request: request, engine: NativeEngine())
+    } else if #available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *) {
+        self.init(request: request, engine: WSEngine(transport: TCPTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
+    } else {
+        self.init(request: request, engine: WSEngine(transport: FoundationTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
+    }
+}
+</code></pre>
+
+### 그래서 `NativeEngine` 은?&#x20;
+
+Foundation Framework에 포함된 `URLSessionWebSocketTask` 을 사용해서 소켓 통신을 하고 있어요. 비교적 친숙하네요. HTTP 통신을 위해 URLSession을 자주 사용하잖아요?? 사촌지간 같은 거죠. `URLSessionDataDelegate`, `URLSessionWebSocketDelegate` 두개의 Delegate도 구현이 되어있네요. 정확한 것은 더 알아봐야 하겠지만, `URLSessionWebSocketTask` 는 앱이 Background 상태로 진입할 때 socket 연결을 종료시키고 있었습니다.
+
+### FoundationTransport
+
+Starscream 3.x.x 버전에서 쓰던 코드와 동일한 녀석들이 포함되어 있는 객체였어요. `CoreFoundation` Framework 안에 [CFStream](https://developer.apple.com/documentation/corefoundation/cfstream) 이라는 녀석을 사용해서 socket 통신을 구현해 놓았어요. 와.. 이런 소스는 처음 봤어요. [`CFStreamCreatePairWithSocketToHost(::::)`](https://developer.apple.com/documentation/corefoundation/1539739-cfstreamcreatepairwithsockettoho) 딱 봐도 진즉에 Deprecated 되었을 것 같았거든요? 근데 놀랍게도 iOS15 이후부터 Deprecated되었네요.&#x20;
+
+{% code title="func connect(::::) 중" %}
+```swift
+var readStream: Unmanaged<CFReadStream>?
+var writeStream: Unmanaged<CFWriteStream>?
+let h = url.host! as NSString
+CFStreamCreatePairWithSocketToHost(nil, h, UInt32(port), &readStream, &writeStream)
+inputStream = readStream!.takeRetainedValue()
+outputStream = writeStream!.takeRetainedValue()
+```
+{% endcode %}
+
+### 내 소스
+
+```swift
+// 기존 (Starscream 내부에서 URLSessionWebSocketTask 를 사용)
+let socket = WebSocket(request: request)
+
+// 변경 (engine 을 주입함. CFStream 사용)
+let engine = WSEngine(transport: FoundationTransport(), certPinner: FoundationSecurity())
+let socket = WebSocket(request: request, engine: engine)
+```
+
+2 line 변경으로 다른 코드는 거의 건드리지 않고 Background 에서 socket 을 끊지 않도록 했어요. (ping / pong 시 timeout 이 발생하는 경우는 socket을 끊더라구요. 사실 이건 당연한 결과지요.)
 
 
 
 
 
+공유할 생각이 있다면 언제든지 편하게 연락주세요.
 
 
 
+Author [JiHoon Lee](http://localhost:5000/u/f7NfZX9yQTNV6NucvAP7UGpv3213 "mention")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Email **dev@2rick.com**
