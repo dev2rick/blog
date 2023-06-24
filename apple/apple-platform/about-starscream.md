@@ -129,15 +129,15 @@ let socket = WebSocket(request: request, engine: engine)
 
 
 
-
-
-공유할 생각이 있다면 언제든지 편하게 연락주세요.
+끄읏
 
 
 
-Author [JiHoon Lee](http://localhost:5000/u/f7NfZX9yQTNV6NucvAP7UGpv3213 "mention")
+**공유할 생각이 있다면 언제든지 편하게 연락주세요.**
 
-Email [**dev@2rick.com**](mailto:dev@2rick.com)
+_Github_ [_https://github.com/dev2rick_](https://github.com/dev2rick)
+
+_Email_ [_**dev@2rick.com**_](mailto:dev@2rick.com)
 
 <div align="left">
 
