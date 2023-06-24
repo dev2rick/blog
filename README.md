@@ -1,5 +1,5 @@
 ---
-cover: .gitbook/assets/Rick (2).png
+cover: .gitbook/assets/Rick (3).png
 coverY: 0
 ---
 
@@ -21,6 +21,6 @@ Email [**dev@2rick.com**](mailto:dev@2rick.com)
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/Rick (1).png" alt="" width="188"><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/Rick (2).png" alt="" width="188"><figcaption></figcaption></figure>
 
 </div>

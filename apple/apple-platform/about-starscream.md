@@ -1,5 +1,7 @@
 ---
 description: https://github.com/daltoniam/Starscream
+cover: https://raw.githubusercontent.com/daltoniam/starscream/assets/starscream.jpg
+coverY: 55
 ---
 
 # Starscream 에 대하여
@@ -136,3 +138,9 @@ let socket = WebSocket(request: request, engine: engine)
 Author [JiHoon Lee](http://localhost:5000/u/f7NfZX9yQTNV6NucvAP7UGpv3213 "mention")
 
 Email [**dev@2rick.com**](mailto:dev@2rick.com)
+
+<div align="left">
+
+<figure><img src="../../.gitbook/assets/Rick.png" alt="" width="125"><figcaption></figcaption></figure>
+
+</div>
