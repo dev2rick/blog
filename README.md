@@ -13,14 +13,12 @@ coverY: 0
 
 현재는 AhnLab Blockchain Company 에서 iOS 개발자로 재직중에 있으며 Blockchain과 Web3 에도 관심이 많습니다.
 
+경력사항 [https://2rick.notion.site/53c842e5c22b49e991dded806e143fb3](https://2rick.notion.site/53c842e5c22b49e991dded806e143fb3)
 
+포트폴리오 [https://2rick.notion.site/c92c3f920d604f9e83806c67f36a93dd](https://2rick.notion.site/c92c3f920d604f9e83806c67f36a93dd)
 
 github [https://github.com/dev2rick](https://github.com/dev2rick)
 
 Email [**dev@2rick.com**](mailto:dev@2rick.com)
 
-<div align="left">
-
-<figure><img src=".gitbook/assets/Rick (2).png" alt="" width="188"><figcaption></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src=".gitbook/assets/Rick (2).png" alt="" width="188"><figcaption></figcaption></figure></div>
